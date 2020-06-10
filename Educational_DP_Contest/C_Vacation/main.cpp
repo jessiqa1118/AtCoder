@@ -48,13 +48,13 @@ int main()
         }
     }
 
-    // 1日目
+    // First day
     for (int j = 0; j < 3; j++)
     {
         dp[0][j] = input[0][j];
     }
 
-    // 2日目以降
+    // After second day
     for (int i = 1; i < N; i++)
     {
         for (int j = 0; j < 3; j++)
