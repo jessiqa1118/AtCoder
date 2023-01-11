@@ -1,27 +1,32 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-using ll = long long;
+
+const int LIMIT = pow(10, 6);
 
 int N, M;
+int cnt = 0;
+vector<bool> visited;
 vector<vector<int>> G;
 
-int get_path_num(int start, vector<bool> visited) {
+void dfs(int start) {
     visited[start] = true;
-    int cnt = 0;
+    cnt++;
 
     for (int nv: G[start]) {
         if (visited[nv]) continue;
-        cnt += get_path_num(nv, visited);
+        dfs(nv);
+        if (cnt > LIMIT) break;
     }
 
-    return ++cnt;
+    visited[start] = false;
 }
 
 int main() {
     cin >> N >> M;
 
     G.resize(N);
+    visited.resize(N, false);
     for (int i = 0; i < M; i++) {
         int u, v;
         cin >> u >> v;
@@ -29,7 +34,6 @@ int main() {
         G[v - 1].push_back(u - 1);
     }
 
-    vector<bool> visited(N, false);
-    int cnt = get_path_num(0, visited);
-    cout << min(cnt, (int) pow(10, 6)) << endl;
+    dfs(0);
+    cout << min(cnt, LIMIT) << endl;
 }
