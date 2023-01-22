@@ -9,27 +9,23 @@ int main() {
     cin >> N >> X;
 
     int A[N], B[N];
-    map<int, int> num;
-    vector<int> coins;
-    for (int i = 0; i < N; i++) {
-        cin >> A[i] >> B[i];
-        num[A[i]] = 0;
-        coins.push_back(A[i]);
-    }
+    for (int i = 0; i < N; i++) cin >> A[i] >> B[i];
 
-    for (int i = 0; i < N; i++) {
-        num[A[i]] += B[i];
-    }
-
-    sort(coins.begin(), coins.end());
-    reverse(coins.begin(), coins.end());
-
-    for (int value: coins) {
-        while (X >= value && num[value] > 0) {
-            X -= value;
-            num[value]--;
+    bool dp[N + 1][X + 1];
+    for (int i = 0; i < N + 1; i++) {
+        for (int j = 0; j < X + 1; j++) {
+            dp[i][j] = (j == 0);
         }
     }
 
-    cout << ((X == 0) ? "Yes" : "No") << endl;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < X + 1; j++) {
+            for (int k = 0; k <= B[i]; k++) {
+                int rest = j - k * A[i];
+                if (rest >= 0 && dp[i][rest]) dp[i + 1][j] = true;
+            }
+        }
+    }
+
+    cout << (dp[N][X] ? "Yes" : "No") << endl;
 }
