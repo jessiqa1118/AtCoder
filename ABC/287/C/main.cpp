@@ -8,34 +8,49 @@ int main() {
     int N, M;
     cin >> N >> M;
 
-    vector<vector<int>> next;
-    next.resize(N + 1);
-    for (int i = 0; i < M; i++) {
+    vector<vector<int>> node(N + 1);
+    for (int i = 1; i < M + 1; i++) {
         int u, v;
         cin >> u >> v;
-        next[u].push_back(v);
-        next[v].push_back(u);
+        node[u].push_back(v);
+        node[v].push_back(u);
     }
 
-    vector<int> visitCnt(N + 1, 0);
-    for (int i = 1; i < N + 1; i++) {
-        for (int n: next[i]) {
-            visitCnt[n]++;
-        }
+    if (M != N - 1) {
+        cout << "No" << endl;
+        return 0;
     }
 
-    int endNum = 0;
     for (int i = 1; i < N + 1; i++) {
-        if (visitCnt[i] == 1) {
-            endNum++;
-            continue;
-        }
-
-        if (visitCnt[i] != 2) {
+        if ((int) node[i].size() > 2) {
             cout << "No" << endl;
             return 0;
         }
     }
 
-    cout << ((endNum == 2) ? "Yes" : "No") << endl;
+    vector<bool> visit(N + 1, false);
+    queue<int> que;
+
+    visit[1] = true;
+    que.push(1);
+    while (!que.empty()) {
+        int u = que.front();
+        que.pop();
+
+        for (int v: node[u]) {
+            if (!visit[v]) {
+                visit[v] = true;
+                que.push(v);
+            }
+        }
+    }
+
+    for (int i = 1; i < N+1; i++) {
+        if (!visit[i]) {
+            cout << "No" << endl;
+            return 0;
+        }
+    }
+
+    cout << "Yes" << endl;
 }
