@@ -4,24 +4,33 @@ using namespace std;
 
 #define ll long long
 
+bool isMatch(char a, char b) {
+    return (a == '?' || b == '?' || a == b);
+}
+
 int main() {
     string S, T;
     cin >> S >> T;
 
-    for (int x = 0; x < (int) T.length() + 1; x++) {
-        string s = S.substr(0, x);
-        s += S.substr((int) S.length() - ((int) T.length() - x), (int) T.length() - x);
+    vector<bool> pre(T.size() + 1, false);
+    vector<bool> suf(T.size() + 1, false);
 
-        bool isMatch = true;
-        for (int i = 0; i < T.length(); i++) {
-            if (T[i] == '?' || s[i] == '?') continue;
+    pre[0] = true;
+    for (int i = 1; i <= (int) T.size(); i++) {
+        if (!isMatch(S[i - 1], T[i - 1])) break;
+        pre[i] = true;
+    }
 
-            if (T[i] != s[i]) {
-                isMatch = false;
-                break;
-            }
-        }
+    reverse(S.begin(), S.end());
+    reverse(T.begin(), T.end());
 
-        cout << ((isMatch) ? "Yes" : "No") << endl;
+    suf[0] = true;
+    for (int i = 1; i <= (int) T.size(); i++) {
+        if (!isMatch(S[i - 1], T[i - 1])) break;
+        suf[i] = true;
+    }
+
+    for (int x = 0; x <= T.size(); x++) {
+        cout << ((pre[x] && suf[T.size()-x]) ? "Yes" : "No") << endl;
     }
 }
