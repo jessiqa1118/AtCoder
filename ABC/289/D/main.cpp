@@ -4,38 +4,36 @@ using namespace std;
 
 #define ll long long
 
-int N, M, X;
-set<int> A, B;
-
-bool can_reach(int pos) {
-    if (pos == X) return true;
-    if (pos > X) return false;
-    if (B.find(pos) != B.end()) return false;
-
-    for (auto a: A) {
-        if(can_reach(pos + a)) return true;
-    }
-
-    return false;
-}
-
 int main() {
+    int N;
     cin >> N;
-    for (int i = 0; i < N; i++) {
-        int a;
-        cin >> a;
-        A.insert(a);
-    }
 
+    vector<int> A(N);
+    for (int i = 0; i < N; i++) cin >> A[i];
+
+    int M;
     cin >> M;
-    for (int i = 0; i < M; i++) {
-        int b;
-        cin >> b;
-        B.insert(b);
-    }
 
+    vector<int> B(M);
+    for (int i = 0; i < M; i++) cin >> B[i];
+
+    int X;
     cin >> X;
 
-    int pos = 0;
-    cout << (can_reach(pos) ? "Yes" : "No") << endl;
+    vector<bool> dp(X + 1), trap(X + 1, false);
+    for (int i = 0; i < M; i++) trap[B[i]] = true;
+
+    dp[0] = true;
+    for (int i = 0; i <= X; i++) {
+        if (trap[i]) {
+            dp[i] = false;
+            continue;
+        }
+
+        for (auto a: A) {
+            if (i >= a) dp[i] = dp[i] || dp[i - a];
+        }
+    }
+
+    cout << (dp[X] ? "Yes" : "No") << endl;
 }
